@@ -33,6 +33,12 @@ public class CodecService {
 	private ConcurrentHashMap<Long, List<Field>> fieldMap = new ConcurrentHashMap<Long, List<Field>>();
 
 	private CodecService() {
+		// 编解码器扫描
+		Collection<Class<?>> codecs = ReflectUtil.scanSubclasses(AbstractCodec.class, "com.game.socket.codec.impl");
+		for (Class<?> clazz : codecs) {
+			((ICodecAble) ReflectUtil.newInstance(clazz)).registerCodec();
+		}
+		// 协议扫描
 		Collection<Class<?>> messages = ReflectUtil.scanSubclasses(Message.class, "com.game");
 		for (Class<?> clazz : messages) {
 			if (!clazz.isAnnotationPresent(Protocol.class)) {
@@ -84,12 +90,22 @@ public class CodecService {
 		long id = message.getId();
 		List<Field> fields = fieldMap.get(id);
 		if (fields != null) {
-
+			for (Field field : fields) {
+				writeValue(buf, ReflectUtil.getFieldValue(field, message), field.getType(), null);
+			}
 		} else {
 			// TODO 告警并注册
 		}
 
-		return buf.array();
+		buf.flip();
+		byte[] data = new byte[buf.limit()];
+		buf.get(data);
+		return data;
+	}
+
+	public void writeValue(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
+		ICodecAble codec = AbstractCodec.getCodec(type);
+		codec.write(buf, value, wrapper);
 	}
 
 	/**

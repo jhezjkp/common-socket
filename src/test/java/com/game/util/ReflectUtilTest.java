@@ -7,6 +7,7 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.game.demo.message.request.ReqLoginMessage;
 import com.game.socket.annotation.Protocol;
 
 public class ReflectUtilTest {
@@ -37,7 +38,15 @@ public class ReflectUtilTest {
 	@Test
 	public void testScanWithAnnotation() {
 		Set<Class<?>> set = ReflectUtil.scanWithAnnotation(Protocol.class, "com.game");
-		assertEquals(1, set.size());
+		assertEquals(2, set.size());
+	}
+
+	@Test
+	public void testSetFieldValue() throws NoSuchFieldException, SecurityException {
+		ReqLoginMessage msg = new ReqLoginMessage();
+		String pwd = "pass";
+		ReflectUtil.setFieldValue(ReqLoginMessage.class.getDeclaredField("password"), msg, pwd);
+		assertEquals(pwd, msg.getPassword());
 	}
 
 }

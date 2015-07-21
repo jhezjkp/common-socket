@@ -3,6 +3,7 @@ package com.game.util;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
@@ -164,6 +165,60 @@ public class ReflectUtil {
 		}
 
 		return classSet;
+	}
+
+	/**
+	 * 获取属性值
+	 * 
+	 * @param field
+	 * @param target
+	 * @return
+	 */
+	public static Object getFieldValue(Field field, Object target) {
+		try {
+			field.setAccessible(true);
+			return field.get(target);
+		} catch (IllegalArgumentException e) {
+			logger.error(e.getMessage(), e);
+		} catch (IllegalAccessException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return null;
+	}
+
+	/**
+	 * 设置属性值
+	 * 
+	 * @param field
+	 * @param target
+	 * @param value
+	 */
+	public static void setFieldValue(Field field, Object target, Object value) {
+		try {
+			field.setAccessible(true);
+			field.set(target, value);
+		} catch (IllegalArgumentException e) {
+			logger.error(e.getMessage(), e);
+		} catch (IllegalAccessException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * 实例化类对象
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	public static <T> T newInstance(Class<T> clazz) {
+		try {
+			return clazz.newInstance();
+		} catch (InstantiationException e) {
+			logger.error(e.getMessage(), e);
+		} catch (IllegalAccessException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return null;
 	}
 
 }
