@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ReflectUtil {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ReflectUtil.class);
+	private static Logger logger = LoggerFactory.getLogger(ReflectUtil.class);
 
 	private ReflectUtil() {
 	}
@@ -74,7 +74,7 @@ public class ReflectUtil {
 					}
 				}
 			} catch (IOException e) {
-				LOGGER.error(e.getMessage(), e);
+				logger.error(e.getMessage(), e);
 			}
 		}
 		return classSet;
@@ -111,7 +111,7 @@ public class ReflectUtil {
 								fullPath.substring(fullPath.indexOf(basePath)).replace(".class", "").replace("/", "."));
 						classSet.add(clazz);
 					} catch (ClassNotFoundException e) {
-						LOGGER.error(e.getMessage(), e);
+						logger.error(e.getMessage(), e);
 					}
 				}
 			}
@@ -139,7 +139,7 @@ public class ReflectUtil {
 					Class<?> clazz = Class.forName(name.replace(".class", "").replace("/", "."));
 					classSet.add(clazz);
 				} catch (ClassNotFoundException e) {
-					LOGGER.error(e.getMessage(), e);
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}

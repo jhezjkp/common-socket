@@ -1,9 +1,10 @@
 package com.game.demo.message.request;
 
+import com.game.socket.Message;
 import com.game.socket.annotation.Protocol;
 
 @Protocol(module = 1, cmd = 1000)
-public class ReqLoginMessage {
+public class ReqLoginMessage extends Message {
 
 	private String userName;
 	private String password;
