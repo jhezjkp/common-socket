@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ReflectUtil {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ReflectUtil.class);
+	private static Logger logger = LoggerFactory.getLogger(ReflectUtil.class);
 
 	private ReflectUtil() {
 	}
@@ -36,11 +36,30 @@ public class ReflectUtil {
 	 * @param packageNames
 	 * @return
 	 */
-	public static Set<Class<?>> scan(Class<? extends Annotation> annotation, String... packageNames) {
+	public static Set<Class<?>> scanWithAnnotation(Class<? extends Annotation> annotation, String... packageNames) {
 		Set<Class<?>> classSet = scan(packageNames);
 		Iterator<Class<?>> iter = classSet.iterator();
 		while (iter.hasNext()) {
 			if (!iter.next().isAnnotationPresent(annotation)) {
+				iter.remove();
+			}
+		}
+		return classSet;
+	}
+
+	/**
+	 * 扫描获取指定包名下的指定类的子类(不包含本身)
+	 * 
+	 * @param annotation
+	 * @param packageNames
+	 * @return
+	 */
+	public static Set<Class<?>> scanSubclasses(Class<?> superClass, String... packageNames) {
+		Set<Class<?>> classSet = scan(packageNames);
+		Iterator<Class<?>> iter = classSet.iterator();
+		while (iter.hasNext()) {
+			Class<?> clazz = iter.next();
+			if (!superClass.isAssignableFrom(clazz) || superClass.equals(clazz)) {
 				iter.remove();
 			}
 		}
@@ -74,7 +93,7 @@ public class ReflectUtil {
 					}
 				}
 			} catch (IOException e) {
-				LOGGER.error(e.getMessage(), e);
+				logger.error(e.getMessage(), e);
 			}
 		}
 		return classSet;
@@ -111,7 +130,7 @@ public class ReflectUtil {
 								fullPath.substring(fullPath.indexOf(basePath)).replace(".class", "").replace("/", "."));
 						classSet.add(clazz);
 					} catch (ClassNotFoundException e) {
-						LOGGER.error(e.getMessage(), e);
+						logger.error(e.getMessage(), e);
 					}
 				}
 			}
@@ -139,7 +158,7 @@ public class ReflectUtil {
 					Class<?> clazz = Class.forName(name.replace(".class", "").replace("/", "."));
 					classSet.add(clazz);
 				} catch (ClassNotFoundException e) {
-					LOGGER.error(e.getMessage(), e);
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}

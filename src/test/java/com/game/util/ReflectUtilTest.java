@@ -36,7 +36,7 @@ public class ReflectUtilTest {
 
 	@Test
 	public void testScanWithAnnotation() {
-		Set<Class<?>> set = ReflectUtil.scan(Protocol.class, "com.game");
+		Set<Class<?>> set = ReflectUtil.scanWithAnnotation(Protocol.class, "com.game");
 		assertEquals(1, set.size());
 	}
 
