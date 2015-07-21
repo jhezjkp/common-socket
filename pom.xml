@@ -118,7 +118,7 @@
 	</dependencies>
 
 	<properties>
-		<mina-version>2.0.9</mina-version>
+		<mina-version>2.0.7</mina-version>
 		<jackson-version>1.9.9</jackson-version>
 		<guava-version>18.0</guava-version>
 		<log4j-version>1.2.16</log4j-version>
