@@ -26,7 +26,20 @@ public interface ICodecAble {
 	 */
 	Class<?>[] getBindingClasses();
 
-	int write(IoBuffer buf, Object value, Class<?> wrapper);
+	/**
+	 * 编码
+	 * 
+	 * @param buf
+	 *            数组缓存
+	 * @param value
+	 *            数据
+	 * @param type
+	 *            数据类型
+	 * @param wrapper
+	 *            内部类型(如果数据是数组或集合，则有该字段)
+	 * @return
+	 */
+	int write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper);
 
 	int read(IoBuffer buf, Message msg, Field field);
 

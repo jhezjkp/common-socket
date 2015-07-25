@@ -22,7 +22,7 @@ public class FloatCodec extends AbstractCodec {
 	}
 
 	@Override
-	public int write(IoBuffer buf, Object value, Class<?> wrapper) {
+	public int write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
 		buf.putFloat((Float) value);
 		return Float.BYTES;
 	}

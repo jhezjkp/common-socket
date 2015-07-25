@@ -22,7 +22,7 @@ public class ShortCodec extends AbstractCodec {
 	}
 
 	@Override
-	public int write(IoBuffer buf, Object value, Class<?> wrapper) {
+	public int write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
 		buf.putShort((Short) value);
 		return Short.BYTES;
 	}

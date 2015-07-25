@@ -24,7 +24,7 @@ public class StringCodec extends AbstractCodec {
 	}
 
 	@Override
-	public int write(IoBuffer buf, Object value, Class<?> wrapper) {
+	public int write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
 		String str = (String) value;
 		short len = 0;
 		if (str != null) {

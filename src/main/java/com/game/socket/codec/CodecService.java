@@ -1,8 +1,6 @@
 package com.game.socket.codec;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,15 +45,7 @@ public class CodecService {
 			}
 			long id = SocketUtil.getMessageId((Class<? extends Message>) clazz);
 			// 取字段
-			List<Field> list = new ArrayList<Field>(clazz.getDeclaredFields().length);
-			for (Field field : clazz.getDeclaredFields()) {
-				if (Modifier.isFinal(field.getModifiers()) || Modifier.isStatic(field.getModifiers())
-						|| Modifier.isTransient(field.getModifiers())) {
-					// final、static、transient修饰的字段不传输
-					continue;
-				}
-				list.add(field);
-			}
+			List<Field> list = ReflectUtil.getTransferFields(clazz);
 			if (fieldMap.putIfAbsent(id, list) != null) {
 				logger.error("xxxxxx 协议号冲突：class={}", clazz.getName());
 				throw new RuntimeException("协议号冲突: " + clazz.getName());
@@ -91,7 +81,8 @@ public class CodecService {
 		List<Field> fields = fieldMap.get(id);
 		if (fields != null) {
 			for (Field field : fields) {
-				writeValue(buf, ReflectUtil.getFieldValue(field, message), field.getType(), null);
+				writeValue(buf, ReflectUtil.getFieldValue(field, message), field.getType(),
+						ReflectUtil.getWrapperClass(field));
 			}
 		} else {
 			// TODO 告警并注册
@@ -104,8 +95,11 @@ public class CodecService {
 	}
 
 	public void writeValue(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
+		// if (value == null) {
+		// System.err.println(type);
+		// }
 		ICodecAble codec = AbstractCodec.getCodec(type);
-		codec.write(buf, value, wrapper);
+		codec.write(buf, value, type, wrapper);
 	}
 
 	/**
