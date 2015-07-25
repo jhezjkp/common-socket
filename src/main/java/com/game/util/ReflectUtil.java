@@ -4,11 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.net.JarURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 import java.util.jar.JarEntry;
@@ -219,6 +222,25 @@ public class ReflectUtil {
 			logger.error(e.getMessage(), e);
 		}
 		return null;
+	}
+
+	/**
+	 * 获取指定类型中需要传输的字段列表
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	public static List<Field> getTransferFields(Class<?> clazz) {
+		List<Field> list = new ArrayList<Field>(clazz.getDeclaredFields().length);
+		for (Field field : clazz.getDeclaredFields()) {
+			if (Modifier.isFinal(field.getModifiers()) || Modifier.isStatic(field.getModifiers())
+					|| Modifier.isTransient(field.getModifiers())) {
+				// final、static、transient修饰的字段不传输
+				continue;
+			}
+			list.add(field);
+		}
+		return list;
 	}
 
 }

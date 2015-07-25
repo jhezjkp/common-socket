@@ -1,5 +1,6 @@
 package com.game.socket.codec.impl;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 
 import org.apache.mina.core.buffer.IoBuffer;
@@ -14,7 +15,7 @@ public class ArrayCodec extends AbstractCodec {
 
 	private final Logger logger = LoggerFactory.getLogger(ArrayCodec.class);
 
-	private static final Class<?>[] BINDING_CLASSES = new Class<?>[] { byte.class, Byte.class };
+	private static final Class<?>[] BINDING_CLASSES = new Class<?>[] { ArrayCodec.class };
 
 	@Override
 	public Class<?>[] getBindingClasses() {
@@ -23,6 +24,8 @@ public class ArrayCodec extends AbstractCodec {
 
 	@Override
 	public int write(IoBuffer buf, Object value, Class<?> wrapper) {
+		// 获取数组长度
+		int len = Array.getLength(value);
 		buf.put((Byte) value);
 		return Byte.BYTES;
 	}
