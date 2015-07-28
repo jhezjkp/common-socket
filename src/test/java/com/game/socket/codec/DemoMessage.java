@@ -1,5 +1,6 @@
 package com.game.socket.codec;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.game.socket.Message;
@@ -194,6 +195,120 @@ public class DemoMessage extends Message {
 
 	public void setInfoList(List<DemoInfo> infoList) {
 		this.infoList = infoList;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + age;
+		result = prime * result + ((age2 == null) ? 0 : age2.hashCode());
+		result = prime * result + flag;
+		result = prime * result + ((flag2 == null) ? 0 : flag2.hashCode());
+		result = prime * result + (int) (gold ^ (gold >>> 32));
+		result = prime * result + ((gold2 == null) ? 0 : gold2.hashCode());
+		result = prime * result + ((info == null) ? 0 : info.hashCode());
+		result = prime * result + Arrays.hashCode(infoArray);
+		result = prime * result + ((infoList == null) ? 0 : infoList.hashCode());
+		result = prime * result + (isAdult ? 1231 : 1237);
+		result = prime * result + ((isAdult2 == null) ? 0 : isAdult2.hashCode());
+		result = prime * result + ((itemIds == null) ? 0 : itemIds.hashCode());
+		result = prime * result + len;
+		result = prime * result + ((len2 == null) ? 0 : len2.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(money);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((money2 == null) ? 0 : money2.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + Float.floatToIntBits(rate);
+		result = prime * result + ((rate2 == null) ? 0 : rate2.hashCode());
+		result = prime * result + Arrays.hashCode(week);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DemoMessage other = (DemoMessage) obj;
+		if (age != other.age)
+			return false;
+		if (age2 == null) {
+			if (other.age2 != null)
+				return false;
+		} else if (!age2.equals(other.age2))
+			return false;
+		if (flag != other.flag)
+			return false;
+		if (flag2 == null) {
+			if (other.flag2 != null)
+				return false;
+		} else if (!flag2.equals(other.flag2))
+			return false;
+		if (gold != other.gold)
+			return false;
+		if (gold2 == null) {
+			if (other.gold2 != null)
+				return false;
+		} else if (!gold2.equals(other.gold2))
+			return false;
+		if (info == null) {
+			if (other.info != null)
+				return false;
+		} else if (!info.equals(other.info))
+			return false;
+		if (!Arrays.equals(infoArray, other.infoArray))
+			return false;
+		if (infoList == null) {
+			if (other.infoList != null)
+				return false;
+		} else if (!infoList.equals(other.infoList))
+			return false;
+		if (isAdult != other.isAdult)
+			return false;
+		if (isAdult2 == null) {
+			if (other.isAdult2 != null)
+				return false;
+		} else if (!isAdult2.equals(other.isAdult2))
+			return false;
+		if (itemIds == null) {
+			if (other.itemIds != null)
+				return false;
+		} else if (!itemIds.equals(other.itemIds))
+			return false;
+		if (len != other.len)
+			return false;
+		if (len2 == null) {
+			if (other.len2 != null)
+				return false;
+		} else if (!len2.equals(other.len2))
+			return false;
+		if (Double.doubleToLongBits(money) != Double.doubleToLongBits(other.money))
+			return false;
+		if (money2 == null) {
+			if (other.money2 != null)
+				return false;
+		} else if (!money2.equals(other.money2))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (Float.floatToIntBits(rate) != Float.floatToIntBits(other.rate))
+			return false;
+		if (rate2 == null) {
+			if (other.rate2 != null)
+				return false;
+		} else if (!rate2.equals(other.rate2))
+			return false;
+		if (!Arrays.equals(week, other.week))
+			return false;
+		return true;
 	}
 
 }

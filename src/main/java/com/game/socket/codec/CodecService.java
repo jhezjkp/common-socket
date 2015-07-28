@@ -29,6 +29,8 @@ public class CodecService {
 
 	/** 属性Map<消息唯一编号，该消息需要传输的字段> */
 	private ConcurrentHashMap<Long, List<Field>> fieldMap = new ConcurrentHashMap<Long, List<Field>>();
+	/** 消息Map<消息唯一编号, 消息类型> */
+	private ConcurrentHashMap<Long, Class<?>> messageMap = new ConcurrentHashMap<Long, Class<?>>();
 
 	private CodecService() {
 		// 编解码器扫描
@@ -50,6 +52,7 @@ public class CodecService {
 				logger.error("xxxxxx 协议号冲突：class={}", clazz.getName());
 				throw new RuntimeException("协议号冲突: " + clazz.getName());
 			}
+			messageMap.put(id, clazz);
 		}
 		logger.info("====== 成功加载{}个协议消息", fieldMap.size());
 	}
@@ -105,11 +108,28 @@ public class CodecService {
 	/**
 	 * 将字节数组转换为协议转对象
 	 * 
-	 * @param message
+	 * @param id
+	 * @param buf
 	 * @return
 	 */
-	public Message bytes2Message(byte[] bytes) {
-		return null;
+	public Message bytes2Message(long id, IoBuffer buf) {
+		Class<?> type = messageMap.get(id);
+		Message msg = null;
+		if (type == null) {
+			logger.error("未找到对应的消息类型：id={}", id);
+		} else {
+			try {
+				msg = (Message) type.newInstance();
+				List<Field> list = fieldMap.get(id);
+				for (Field field : list) {
+					ReflectUtil.setFieldValue(field, msg, AbstractCodec.getCodec(field.getType()).read(buf,
+							field.getType(), ReflectUtil.getWrapperClass(field)));
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
+		return msg;
 	}
 
 }

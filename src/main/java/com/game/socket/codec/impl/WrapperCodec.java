@@ -8,7 +8,6 @@ import org.apache.mina.core.buffer.IoBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.game.socket.Message;
 import com.game.socket.codec.AbstractCodec;
 import com.game.util.ReflectUtil;
 
@@ -42,10 +41,24 @@ public class WrapperCodec extends AbstractCodec {
 	}
 
 	@Override
-	public int read(IoBuffer buf, Message msg, Field field) {
-		byte value = buf.get();
-		ReflectUtil.setFieldValue(field, msg, value);
-		return Byte.BYTES;
+	public Object read(IoBuffer buf, Class<?> type, Class<?> wrapper) {
+		Object value = null;
+		try {
+			value = type.newInstance();
+			List<Field> list = fieldMap.get(type);
+			if (list == null) {
+				list = ReflectUtil.getTransferFields(type);
+				fieldMap.put(type, list);
+				logger.info("register bean {}", type.getSimpleName());
+			}
+			for (Field field : list) {
+				ReflectUtil.setFieldValue(field, value,
+						getCodec(field.getType()).read(buf, field.getType(), ReflectUtil.getWrapperClass(field)));
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return value;
 	}
 
 }
