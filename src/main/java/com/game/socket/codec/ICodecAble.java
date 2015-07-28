@@ -35,7 +35,7 @@ public interface ICodecAble {
 	 *            内部类型(如果数据是数组或集合，则有该字段)
 	 * @return
 	 */
-	int write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper);
+	void write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper);
 
 	/**
 	 * 解码

@@ -20,13 +20,15 @@ public class ArrayCodec extends AbstractCodec {
 	}
 
 	@Override
-	public int write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
+	public void write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
 		// 获取数组长度
 		if (value == null) {
 			buf.putShort((short) 0);
+			outboundBytes.addAndGet(Short.BYTES);
 		} else {
 			int len = Array.getLength(value);
 			buf.putShort((short) len);
+			outboundBytes.addAndGet(Short.BYTES);
 			int index = 0;
 			while (index < len) {
 				Object v = Array.get(value, index);
@@ -34,13 +36,13 @@ public class ArrayCodec extends AbstractCodec {
 				index++;
 			}
 		}
-		return Short.BYTES;
 	}
 
 	@Override
 	public Object read(IoBuffer buf, Class<?> type, Class<?> wrapper) {
 		Object value = null;
 		int len = buf.getShort();
+		inboundBytes.addAndGet(Short.BYTES);
 		if (len > 0) {
 			value = Array.newInstance(wrapper, len);
 			int index = 0;

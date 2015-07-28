@@ -24,24 +24,25 @@ public class CollectionCodec extends AbstractCodec {
 	}
 
 	@Override
-	public int write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
+	public void write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
 		// 获取数组长度
 		Collection<?> collection = (Collection<?>) value;
 		if (collection != null && collection.size() > 0) {
 			buf.putShort((short) collection.size());
+			outboundBytes.addAndGet(Short.BYTES);
 			for (Object o : collection) {
 				getCodec(wrapper).write(buf, o, o.getClass(), null);
 			}
 		} else {
 			buf.putShort((short) 0);
-			return Short.BYTES;
+			outboundBytes.addAndGet(Short.BYTES);
 		}
-		return Byte.BYTES;
 	}
 
 	@Override
 	public Object read(IoBuffer buf, Class<?> type, Class<?> wrapper) {
 		int len = buf.getShort();
+		inboundBytes.addAndGet(Byte.BYTES);
 		Collection<Object> value = null;
 		if (len > 0) {
 			if (Set.class.isAssignableFrom(type)) {

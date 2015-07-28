@@ -18,14 +18,15 @@ public class DoubleCodec extends AbstractCodec {
 	}
 
 	@Override
-	public int write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
+	public void write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
 		buf.putDouble((Double) value);
-		return Double.BYTES;
+		outboundBytes.addAndGet(Double.BYTES);
 	}
 
 	@Override
 	public Object read(IoBuffer buf, Class<?> type, Class<?> wrapper) {
 		double value = buf.getDouble();
+		inboundBytes.addAndGet(Double.BYTES);
 		return value;
 	}
 

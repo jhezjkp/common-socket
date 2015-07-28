@@ -18,14 +18,15 @@ public class FloatCodec extends AbstractCodec {
 	}
 
 	@Override
-	public int write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
+	public void write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
 		buf.putFloat((Float) value);
-		return Float.BYTES;
+		outboundBytes.addAndGet(Float.BYTES);
 	}
 
 	@Override
 	public Object read(IoBuffer buf, Class<?> type, Class<?> wrapper) {
 		float value = buf.getFloat();
+		inboundBytes.addAndGet(Float.BYTES);
 		return value;
 	}
 

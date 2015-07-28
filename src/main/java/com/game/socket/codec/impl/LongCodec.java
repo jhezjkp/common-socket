@@ -18,14 +18,15 @@ public class LongCodec extends AbstractCodec {
 	}
 
 	@Override
-	public int write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
+	public void write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
 		buf.putLong((Long) value);
-		return Long.BYTES;
+		outboundBytes.addAndGet(Long.BYTES);
 	}
 
 	@Override
 	public Object read(IoBuffer buf, Class<?> type, Class<?> wrapper) {
 		long value = buf.getLong();
+		inboundBytes.addAndGet(Long.BYTES);
 		return value;
 	}
 

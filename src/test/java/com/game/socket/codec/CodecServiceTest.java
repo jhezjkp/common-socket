@@ -266,4 +266,21 @@ public class CodecServiceTest {
 		assertEquals(msg.getInfoList(), rmsg.getInfoList());
 		assertEquals(msg, rmsg);
 	}
+
+	@Test
+	public void testFlud() {
+		ReqLoginMessage msg = new ReqLoginMessage("demo", "pass");
+		byte[] bytes = getReqLoginMessageByteData(msg);
+
+		CodecService.getInstance().message2Bytes(msg);
+		assertEquals(bytes.length, CodecService.getInstance().getOutboundBytes());
+
+		IoBuffer buf = IoBuffer.allocate(32);
+		buf.setAutoExpand(true);
+		buf.setAutoShrink(true);
+		buf.put(getReqLoginMessageByteData(msg));
+		buf.flip();
+		CodecService.getInstance().bytes2Message(msg.getId(), buf);
+		assertEquals(bytes.length, CodecService.getInstance().getInboundBytes());
+	}
 }

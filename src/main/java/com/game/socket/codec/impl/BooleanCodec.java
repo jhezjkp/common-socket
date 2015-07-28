@@ -18,14 +18,15 @@ public class BooleanCodec extends AbstractCodec {
 	}
 
 	@Override
-	public int write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
+	public void write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
 		buf.put(((Boolean) value) ? (byte) 1 : (byte) 0);
-		return Byte.BYTES;
+		outboundBytes.addAndGet(Byte.BYTES);
 	}
 
 	@Override
 	public Object read(IoBuffer buf, Class<?> type, Class<?> wrapper) {
 		byte value = buf.get();
+		inboundBytes.addAndGet(Byte.BYTES);
 		return value == 1;
 	}
 

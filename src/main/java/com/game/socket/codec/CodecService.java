@@ -132,4 +132,22 @@ public class CodecService {
 		return msg;
 	}
 
+	/**
+	 * 获取入服的解码流量
+	 * 
+	 * @return
+	 */
+	public long getInboundBytes() {
+		return AbstractCodec.getInboundBytes();
+	}
+
+	/**
+	 * 获取出服的编码流量
+	 * 
+	 * @return
+	 */
+	public long getOutboundBytes() {
+		return AbstractCodec.getOutboundBytes();
+	}
+
 }

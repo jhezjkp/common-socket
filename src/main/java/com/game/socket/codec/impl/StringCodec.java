@@ -21,27 +21,30 @@ public class StringCodec extends AbstractCodec {
 	}
 
 	@Override
-	public int write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
+	public void write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
 		String str = (String) value;
 		short len = 0;
 		if (str != null) {
-			len = (short) str.length();
+			byte[] bytes = str.getBytes(charset);
+			len = (short) bytes.length;
 			buf.putShort(len);
-			buf.put(str.getBytes(charset));
+			buf.put(bytes);
 		} else {
 			buf.putShort((short) 0);
 		}
-		return Short.BYTES + len;
+		outboundBytes.addAndGet(Short.BYTES + len);
 	}
 
 	@Override
 	public Object read(IoBuffer buf, Class<?> type, Class<?> wrapper) {
 		short len = buf.getShort();
+		inboundBytes.addAndGet(Short.BYTES);
 		String value = null;
 		if (len > 0) {
 			byte[] bytes = new byte[len];
 			buf.get(bytes);
 			value = new String(bytes, charset);
+			inboundBytes.addAndGet(len);
 		}
 		return value;
 	}

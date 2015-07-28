@@ -18,14 +18,15 @@ public class IntegerCodec extends AbstractCodec {
 	}
 
 	@Override
-	public int write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
+	public void write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
 		buf.putInt((Integer) value);
-		return Integer.BYTES;
+		outboundBytes.addAndGet(Integer.BYTES);
 	}
 
 	@Override
 	public Object read(IoBuffer buf, Class<?> type, Class<?> wrapper) {
 		int value = buf.getInt();
+		inboundBytes.addAndGet(Integer.BYTES);
 		return value;
 	}
 

@@ -18,14 +18,15 @@ public class ShortCodec extends AbstractCodec {
 	}
 
 	@Override
-	public int write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
+	public void write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
 		buf.putShort((Short) value);
-		return Short.BYTES;
+		outboundBytes.addAndGet(Short.BYTES);
 	}
 
 	@Override
 	public Object read(IoBuffer buf, Class<?> type, Class<?> wrapper) {
 		short value = buf.getShort();
+		inboundBytes.addAndGet(Short.BYTES);
 		return value;
 	}
 

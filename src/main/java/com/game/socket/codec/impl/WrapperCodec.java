@@ -26,7 +26,7 @@ public class WrapperCodec extends AbstractCodec {
 	}
 
 	@Override
-	public int write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
+	public void write(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {
 		List<Field> list = fieldMap.get(type);
 		if (list == null) {
 			list = ReflectUtil.getTransferFields(type);
@@ -37,7 +37,6 @@ public class WrapperCodec extends AbstractCodec {
 			Object v = ReflectUtil.getFieldValue(field, value);
 			AbstractCodec.getCodec(field.getType()).write(buf, v, field.getType(), ReflectUtil.getWrapperClass(field));
 		}
-		return 0;
 	}
 
 	@Override
