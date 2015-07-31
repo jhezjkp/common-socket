@@ -272,8 +272,10 @@ public class CodecServiceTest {
 		ReqLoginMessage msg = new ReqLoginMessage("demo", "pass");
 		byte[] bytes = getReqLoginMessageByteData(msg);
 
+		long in = CodecService.getInstance().getInboundBytes();
+		long out = CodecService.getInstance().getOutboundBytes();
 		CodecService.getInstance().message2Bytes(msg);
-		assertEquals(bytes.length, CodecService.getInstance().getOutboundBytes());
+		assertEquals(bytes.length + out, CodecService.getInstance().getOutboundBytes());
 
 		IoBuffer buf = IoBuffer.allocate(32);
 		buf.setAutoExpand(true);
@@ -281,6 +283,6 @@ public class CodecServiceTest {
 		buf.put(getReqLoginMessageByteData(msg));
 		buf.flip();
 		CodecService.getInstance().bytes2Message(msg.getId(), buf);
-		assertEquals(bytes.length, CodecService.getInstance().getInboundBytes());
+		assertEquals(bytes.length + in, CodecService.getInstance().getInboundBytes());
 	}
 }
