@@ -75,11 +75,7 @@ public class CodecService {
 	 * @param message
 	 * @return
 	 */
-	public byte[] message2Bytes(Message message) {
-		IoBuffer buf = IoBuffer.allocate(64);
-		buf.setAutoExpand(true);
-		buf.setAutoShrink(true);
-
+	public void message2Bytes(IoBuffer buf, Message message) {
 		int id = message.getId();
 		List<Field> fields = fieldMap.get(id);
 		if (fields != null) {
@@ -90,11 +86,7 @@ public class CodecService {
 		} else {
 			// TODO 告警并注册
 		}
-
 		buf.flip();
-		byte[] data = new byte[buf.limit()];
-		buf.get(data);
-		return data;
 	}
 
 	public void writeValue(IoBuffer buf, Object value, Class<?> type, Class<?> wrapper) {

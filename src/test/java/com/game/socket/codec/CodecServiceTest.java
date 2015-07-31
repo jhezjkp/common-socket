@@ -34,7 +34,12 @@ public class CodecServiceTest {
 	@Test
 	public void testSimpleWrite() {
 		ReqLoginMessage msg = new ReqLoginMessage("demo", "pass");
-		byte[] bytes = CodecService.getInstance().message2Bytes(msg);
+		IoBuffer buf = IoBuffer.allocate(64);
+		buf.setAutoExpand(true);
+		buf.setAutoShrink(true);
+		CodecService.getInstance().message2Bytes(buf, msg);
+		byte[] bytes = new byte[buf.limit()];
+		buf.get(bytes);
 		assertArrayEquals(getReqLoginMessageByteData(msg), bytes);
 	}
 
@@ -225,7 +230,12 @@ public class CodecServiceTest {
 	public void testWrite() {
 		DemoMessage msg = buildDemoMessage();
 
-		byte[] bytes = CodecService.getInstance().message2Bytes(msg);
+		IoBuffer buf = IoBuffer.allocate(64);
+		buf.setAutoExpand(true);
+		buf.setAutoShrink(true);
+		CodecService.getInstance().message2Bytes(buf, msg);
+		byte[] bytes = new byte[buf.limit()];
+		buf.get(bytes);
 
 		assertArrayEquals(getDemoMessageByteData(msg), bytes);
 	}
@@ -274,10 +284,13 @@ public class CodecServiceTest {
 
 		long in = CodecService.getInstance().getInboundBytes();
 		long out = CodecService.getInstance().getOutboundBytes();
-		CodecService.getInstance().message2Bytes(msg);
+		IoBuffer buf = IoBuffer.allocate(64);
+		buf.setAutoExpand(true);
+		buf.setAutoShrink(true);
+		CodecService.getInstance().message2Bytes(buf, msg);
 		assertEquals(bytes.length + out, CodecService.getInstance().getOutboundBytes());
 
-		IoBuffer buf = IoBuffer.allocate(32);
+		buf = IoBuffer.allocate(32);
 		buf.setAutoExpand(true);
 		buf.setAutoShrink(true);
 		buf.put(getReqLoginMessageByteData(msg));
