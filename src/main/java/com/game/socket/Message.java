@@ -48,7 +48,7 @@ public abstract class Message implements Serializable {
 	 * 
 	 * @return
 	 */
-	public long getId() {
+	public int getId() {
 		return SocketUtil.getMessageId(getClass());
 	}
 

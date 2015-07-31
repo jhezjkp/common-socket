@@ -28,9 +28,9 @@ public class CodecService {
 	private static CodecService instance;
 
 	/** 属性Map<消息唯一编号，该消息需要传输的字段> */
-	private ConcurrentHashMap<Long, List<Field>> fieldMap = new ConcurrentHashMap<Long, List<Field>>();
+	private ConcurrentHashMap<Integer, List<Field>> fieldMap = new ConcurrentHashMap<Integer, List<Field>>();
 	/** 消息Map<消息唯一编号, 消息类型> */
-	private ConcurrentHashMap<Long, Class<?>> messageMap = new ConcurrentHashMap<Long, Class<?>>();
+	private ConcurrentHashMap<Integer, Class<?>> messageMap = new ConcurrentHashMap<Integer, Class<?>>();
 
 	private CodecService() {
 		// 编解码器扫描
@@ -45,7 +45,7 @@ public class CodecService {
 				logger.error("xxxxxx 非法的协议消息: class={}", clazz.getName());
 				throw new RuntimeException("非法的协议消息: " + clazz.getName());
 			}
-			long id = SocketUtil.getMessageId((Class<? extends Message>) clazz);
+			int id = SocketUtil.getMessageId((Class<? extends Message>) clazz);
 			// 取字段
 			List<Field> list = ReflectUtil.getTransferFields(clazz);
 			if (fieldMap.putIfAbsent(id, list) != null) {
@@ -80,7 +80,7 @@ public class CodecService {
 		buf.setAutoExpand(true);
 		buf.setAutoShrink(true);
 
-		long id = message.getId();
+		int id = message.getId();
 		List<Field> fields = fieldMap.get(id);
 		if (fields != null) {
 			for (Field field : fields) {
@@ -112,7 +112,7 @@ public class CodecService {
 	 * @param buf
 	 * @return
 	 */
-	public Message bytes2Message(long id, IoBuffer buf) {
+	public Message bytes2Message(int id, IoBuffer buf) {
 		Class<?> type = messageMap.get(id);
 		Message msg = null;
 		if (type == null) {

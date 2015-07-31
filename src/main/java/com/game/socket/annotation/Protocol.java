@@ -16,14 +16,16 @@ import java.lang.annotation.Target;
 public @interface Protocol {
 
 	/**
-	 * 模块号
+	 * 模块号，取值范围为[1, 511]<br/>
+	 * (占10位，考虑到最终的协议号要保留符号位故最大值为2<sup>9</sup>-1)
 	 * 
 	 * @return
 	 */
 	byte module();
 
 	/**
-	 * 命令号
+	 * 命令号，取值范围为[1, 4193303]<br/>
+	 * (占22位，由于是低位，不用考虑符号位故最大值为2<sup>22</sup>-1)
 	 * 
 	 * @return
 	 */

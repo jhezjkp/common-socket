@@ -20,7 +20,7 @@ public class SocketUtil {
 	 * @param clazz
 	 * @return
 	 */
-	public static long getMessageId(Class<? extends Message> clazz) {
+	public static int getMessageId(Class<? extends Message> clazz) {
 		byte module = -1;
 		int cmd = -1;
 		Protocol protocol = clazz.getAnnotation(Protocol.class);
@@ -28,7 +28,7 @@ public class SocketUtil {
 			module = protocol.module();
 			cmd = protocol.cmd();
 		}
-		return (0xff & module) << 56 | cmd;
+		return (0x1ff & module) << 22 | cmd;
 	}
 
 }
